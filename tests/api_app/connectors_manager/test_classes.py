@@ -38,7 +38,7 @@ class ConnectorTestCase(CustomTestCase):
         with self.assertRaises(NotImplementedError):
             MockUpConnector(cc).health_check(self.user)
         pc = PluginConfig.objects.create(
-            value="https://threatmatrix.com",
+            value="https://threatmatrix.khulnasoft.com",
             owner=self.user,
             parameter=Parameter.objects.get(name="url_key_name", python_module=pm),
             connector_config=cc,
@@ -61,13 +61,13 @@ class ConnectorTestCase(CustomTestCase):
         job = Job.objects.create(
             observable_name="test.com",
             observable_classification="domain",
-            status=Job.Status.CONNECTORS_RUNNING.value,
+            status=Job.STATUSES.CONNECTORS_RUNNING.value,
         )
         AnalyzerReport.objects.create(
             report={},
             job=job,
             config=AnalyzerConfig.objects.first(),
-            status=AnalyzerReport.Status.FAILED.value,
+            status=AnalyzerReport.STATUSES.FAILED.value,
             task_id=str(uuid()),
             parameters={},
         )

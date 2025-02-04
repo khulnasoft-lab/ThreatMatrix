@@ -21,8 +21,8 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
   nginx:
-    depends_on:
-      - traefik
-    labels:
-      - "traefik.http.routers.nginx.rule=Host(`localhost`)"
-      - "traefik.http.routers.nginx.entrypoints=web"
+      depends_on:
+        - traefik
+      labels:
+        - "traefik.http.routers.nginx.rule=Host(`localhost`)"
+        - "traefik.http.routers.nginx.entrypoints=web"

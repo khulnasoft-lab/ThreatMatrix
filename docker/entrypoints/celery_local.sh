@@ -4,8 +4,14 @@ until cd /opt/deploy/threat_matrix
 do
     echo "Waiting for server volume..."
 done
+if [ "$AWS_SQS" = "True" ]
+then
+  queues="local.fifo,config.fifo"
+else
+  queues="local,broadcast,config"
+fi
 
-ARGUMENTS="-A threat_matrix.celery worker -n worker_local --uid www-data --time-limit=10000 --gid www-data --pidfile= -Ofair -Q local,broadcast,config -E --without-gossip"
+ARGUMENTS="-A threat_matrix.celery worker -n worker_local --uid www-data --time-limit=10000 --gid www-data --pidfile= -Ofair -Q ${queues} -E --without-gossip"
 if [[ $DEBUG == "True" ]] && [[ $DJANGO_TEST_SERVER == "True" ]];
 then
     echo "Running celery with autoreload"

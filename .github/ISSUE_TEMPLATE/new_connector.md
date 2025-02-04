@@ -3,7 +3,8 @@ name: New Connector
 about: A new connector to integrate with ThreatMatrix
 title: "[Connector]"
 labels: new_connector
-assignees: ""
+assignees: ''
+
 ---
 
 ## Name
@@ -11,9 +12,10 @@ assignees: ""
 ## Link
 
 ## Type of connector
-
 ** what kind of data this connector would push to the integrated service **
 
+
 ## Why should we use it
+
 
 ## Possible implementation

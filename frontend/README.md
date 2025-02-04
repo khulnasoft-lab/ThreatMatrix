@@ -52,7 +52,7 @@ src/                                      source code
 The frontend inside the docker containers does not hot-reload, so
 you need to use `CRA dev server` on your host machine to serve pages when doing development on the frontend, using docker nginx only as API source.
 
-- Start ThreatMatrix containers (see [docs](https://khulnasoft.github.io/ThreatMatrix-docs/ThreatMatrix/installation/)). Original dockerized app is accessible on `http://localhost:80`
+- Start ThreatMatrix containers (see [docs](https://khulnasoft.github.io/devsec-docs/ThreatMatrix/installation/)). Original dockerized app is accessible on `http://localhost:80`
 
 - If you have not `node-js` installed, you have to do that. Follow the guide [here](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04). We tested this with NodeJS >=16.6
 

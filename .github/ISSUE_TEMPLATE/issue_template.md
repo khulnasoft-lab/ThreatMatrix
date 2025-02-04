@@ -1,19 +1,19 @@
 ---
 name: Issue Template
 about: used to report bugs
-title: ""
+title: ''
 labels: bug
-assignees: ""
+assignees: ''
+
 ---
 
 ## What happened
 
 ## Environment
-
 1. OS:
 2. ThreatMatrix version:
 
-## What did you expect to happen
+##  What did you expect to happen
 
 ## How to reproduce your issue
 

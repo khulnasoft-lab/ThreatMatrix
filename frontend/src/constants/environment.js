@@ -1,5 +1,6 @@
 /* eslint-disable prefer-destructuring */
-export const THREATMATRIX_DOCS_URL = "https://khulnasoft.github.io/ThreatMatrix-docs/";
+export const THREATMATRIX_DOCS_URL =
+  "https://khulnasoft.github.io/devsec-docs/";
 export const PYTHREATMATRIX_GH_URL =
   "https://github.com/khulnasoft/pythreatmatrix";
 export const THREATMATRIX_TWITTER_ACCOUNT = "threat_matrix";

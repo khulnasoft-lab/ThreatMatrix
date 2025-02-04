@@ -2,7 +2,7 @@
 # See the file 'LICENSE' for copying permission.
 
 # Check the documentation for the details on how to configure LDAP
-# https://khulnasoft.github.io/ThreatMatrix-docs/ThreatMatrix/advanced_configuration/#ldap
+# https://khulnasoft.github.io/devsec-docs/ThreatMatrix/advanced_configuration/#ldap
 
 import ldap
 from django_auth_ldap.config import GroupOfNamesType, LDAPSearch
