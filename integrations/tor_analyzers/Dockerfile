@@ -1,4 +1,4 @@
-FROM python:3.8-slim
+FROM python:3.13-slim
 
 ENV PROJECT_PATH /opt/deploy
 ENV LOG_PATH /var/log/threat_matrix/tor_analyzers
