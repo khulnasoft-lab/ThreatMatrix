@@ -1,4 +1,4 @@
-FROM python:3.12.3
+FROM python:3.13.2
 
 ENV PROJECT_PATH=/opt/deploy
 ENV LOG_PATH=/var/log/threat_matrix/phishing_analyzers
