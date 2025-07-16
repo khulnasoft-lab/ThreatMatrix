@@ -15,8 +15,8 @@ from api_app.visualizers_manager.models import VisualizerConfig, VisualizerRepor
 from certego_saas.apps.organization.membership import Membership
 from certego_saas.apps.organization.organization import Organization
 from certego_saas.apps.user.models import User
-from threat_matrix.tasks import send_plugin_report_to_elastic
 from tests import CustomTestCase
+from threat_matrix.tasks import send_plugin_report_to_elastic
 
 _now = datetime.datetime(2024, 10, 29, 11, tzinfo=datetime.UTC)
 

@@ -1,7 +1,7 @@
 # api/wsgi.py
 
-import sys
 import os
+import sys
 
 # Add the Django project root to Python path
 sys.path.append(
@@ -12,4 +12,3 @@ sys.path.append(
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "threat_matrix.settings")
 
 # Import the WSGI application from your existing Django wsgi.py
-from threat_matrix.wsgi import application as app

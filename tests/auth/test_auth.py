@@ -110,7 +110,7 @@ class TestUserAuth(CustomOAuthTestCase):
 
         email_obj = EmailConfirmation.objects.get(email=user.email_addresses.first())
         response = self.client.post(verify_email_uri, {"key": email_obj.key})
-        content = response.json()
+        response.json()
 
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(

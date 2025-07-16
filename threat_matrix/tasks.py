@@ -1,26 +1,15 @@
 from __future__ import absolute_import, unicode_literals
 
 import datetime
-import json
 import logging
-import typing
-import uuid
-from typing import Dict, List
 
-import inflection
-from celery import Task, shared_task, signals
-from celery.worker.consumer import Consumer
+from celery import Task, shared_task
 from celery.worker.control import control_command
 from celery.worker.request import Request
 from django.conf import settings
 from django.utils.timezone import now
-from django_celery_beat.models import PeriodicTask
-from elasticsearch.helpers import bulk
 
-from api_app.choices import ReportStatus, Status
 from threat_matrix import secrets
-from threat_matrix.celery import app, get_queue_name
-from threat_matrix.settings._util import get_environment
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +47,6 @@ def update_plugin(state, python_module_pk: int):
 
 @shared_task(base=FailureLoggedTask, name="execute_ingestor", soft_time_limit=300)
 def execute_ingestor(config_name: str):
-    from api_app.ingestors_manager.classes import Ingestor
     from api_app.ingestors_manager.models import IngestorConfig
 
     config = IngestorConfig.objects.get(name=config_name)
@@ -99,6 +87,7 @@ def remove_old_jobs():
 @shared_task(base=FailureLoggedTask, name="refresh_cache", soft_time_limit=120)
 def refresh_cache(python_class_str: str):
     from django.utils.module_loading import import_string
+
     from api_app.models import PythonConfig
 
     logger.info(f"Refreshing cache for {python_class_str}")
