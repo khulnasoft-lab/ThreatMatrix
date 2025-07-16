@@ -14,6 +14,7 @@ import {
 import { useOrganizationStore } from "../../../stores/useOrganizationStore";
 import { usePluginConfigurationStore } from "../../../stores/usePluginConfigurationStore";
 import { PluginsTypes } from "../../../constants/pluginConst";
+import { THREATMATRIX_DOCS_URL } from "../../../constants/environment";
 
 // table config
 const tableConfig = {};
@@ -67,7 +68,7 @@ export default function PluginWrapper({
           <span className="text-muted">
             {description} For more info check the{" "}
             <Link
-              to="https://khulnasoft.github.io/docs/ThreatMatrix/usage/#plugins-framework"
+              to={`${THREATMATRIX_DOCS_URL}ThreatMatrix/usage/#plugins-framework`}
               target="_blank"
             >
               official doc.
@@ -91,6 +92,7 @@ export default function PluginWrapper({
               config={tableConfig}
               initialState={tableInitialState}
               columns={columns}
+              autoResetPage
             />
           )}
         />

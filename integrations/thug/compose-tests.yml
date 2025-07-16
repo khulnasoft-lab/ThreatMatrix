@@ -1,0 +1,6 @@
+services:
+  thug:
+    build:
+      context: ../integrations/thug
+      dockerfile: Dockerfile
+    image: khulnasoft/threatmatrix_thug:test

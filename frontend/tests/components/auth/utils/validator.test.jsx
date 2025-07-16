@@ -16,7 +16,7 @@ describe("Compare Password", () => {
   });
   test("Password do not match", () => {
     const password = "threatmatrixpassword";
-    const confirmPassword = "ThreatmatrixPassword";
+    const confirmPassword = "IntelowlPassword";
     expect(ComparePassword(password, confirmPassword)).toEqual({
       password: "Passwords do not match.",
       confirmPassword: "Passwords do not match.",

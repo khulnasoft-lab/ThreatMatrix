@@ -13,13 +13,17 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import { MdInfoOutline } from "react-icons/md";
-import { JSONTree } from "react-json-tree";
 import { Loader, DataTable } from "@certego/certego-ui";
 
 import { format } from "date-fns";
 import { PluginsTypes, PluginFinalStatuses } from "../../constants/pluginConst";
 import { searchTableColumns } from "./searchTableColumns";
 import { pluginReportQueries } from "./searchApi";
+import { useJsonEditorStore } from "../../stores/useJsonEditorStore";
+import { SearchJSONReport } from "./utils";
+
+import { datetimeFormatStr } from "../../constants/miscConst";
+import { THREATMATRIX_DOCS_URL } from "../../constants/environment";
 
 // table config
 const tableConfig = { enableExpanded: true, enableFlexLayout: true };
@@ -29,24 +33,19 @@ const tableInitialState = {
 };
 
 const tableProps = {
-  SubComponent: ({ row }) => (
-    <div
-      id={`jobreport-jsoninput-${row.id}`}
-      style={{ maxHeight: "50vh", overflow: "scroll" }}
-    >
-      <JSONTree data={row.original?.report} keyPath={["report"]} />
-    </div>
-  ),
+  SubComponent: ({ row }) => <SearchJSONReport row={row} />,
 };
 
 export default function Search() {
   const [elasticData, setElasticData] = React.useState([]);
   const [loadingData, setLoadingData] = React.useState(false);
+  const [setTextToHighlight] = useJsonEditorStore((state) => [
+    state.setTextToHighlight,
+  ]);
 
-  const isoFormatString = "yyyy-MM-dd'T'HH:mm";
   const defaultStartDate = new Date();
   defaultStartDate.setDate(defaultStartDate.getDate() - 30); // default: 30 days time range
-  const defaultStartDateStr = format(defaultStartDate, isoFormatString);
+  const defaultStartDateStr = format(defaultStartDate, datetimeFormatStr);
 
   const formik = useFormik({
     initialValues: {
@@ -54,9 +53,9 @@ export default function Search() {
       name: "",
       status: "",
       fromStartTime: defaultStartDateStr,
-      toStartTime: format(new Date(), isoFormatString),
+      toStartTime: format(new Date(), datetimeFormatStr),
       fromEndTime: defaultStartDateStr,
-      toEndTime: format(new Date(), isoFormatString),
+      toEndTime: format(new Date(), datetimeFormatStr),
       errors: "",
       report: "",
     },
@@ -145,7 +144,7 @@ export default function Search() {
                   This section only works if Elasticsearch has been configured
                   correctly. For more info check the{" "}
                   <Link
-                    to="https://khulnasoft.github.io/docs/ThreatMatrix/advanced_configuration/#elasticsearch"
+                    to={`${THREATMATRIX_DOCS_URL}ThreatMatrix/advanced_configuration/#elasticsearch`}
                     target="_blank"
                   >
                     official doc.
@@ -388,7 +387,10 @@ export default function Search() {
                 type="text"
                 name="report"
                 value={formik.values.report}
-                onChange={formik.handleChange}
+                onChange={(event) => {
+                  formik.setFieldValue("report", event.target.value, false);
+                  setTextToHighlight(event.target.value);
+                }}
                 onBlur={formik.handleBlur}
                 className="bg-darker border-dark"
                 invalid={formik.touched.report && formik.errors.report}
@@ -405,9 +407,7 @@ export default function Search() {
                 size="sm"
                 color="primary"
                 type="submit"
-                disabled={
-                  !formik.isValid || formik.isSubmitting || !formik.dirty
-                }
+                disabled={!formik.isValid || formik.isSubmitting}
               >
                 {formik.isSubmitting && <Spinner size="sm" />}Search
               </Button>
@@ -424,6 +424,7 @@ export default function Search() {
               config={tableConfig}
               initialState={tableInitialState}
               columns={searchTableColumns}
+              autoResetPage
               {...tableProps}
             />
           )}

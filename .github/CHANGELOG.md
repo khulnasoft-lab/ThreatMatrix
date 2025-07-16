@@ -2,6 +2,35 @@
 
 [**Upgrade Guide**](https://khulnasoft.github.io/docs/ThreatMatrix/installation/#update-to-the-most-recent-version)
 
+## [v6.4.0](https://github.com/khulnasoft/ThreatMatrix/releases/tag/v6.4.0)
+This release mostly provides important changes in the backend part that will be supported in the UI in the next releases.
+* Analyzable: Representation of an observable or a sample: every job is linked to the scanned analyzable.
+* Data models: A new system to normalize the output of analyzers (already available in the job raw section). It allows analyzers to specify the evaluation, reliability and many others information about the analyzable. 
+* User Event: Users can create reports for analyzables: indicating additional information or a custom evaluation.
+* Engine: Evaluate user reports and analyzers's data to assign a score to the job.
+
+As usual, we add new plugins. This release brings the following new ones:
+* [Nuclei](https://github.com/projectdiscovery/nuclei): A modern, high-performance vulnerability scanner that leverages simple YAML-based templates.
+* [ipquery](https://ipquery.io/): a flexible api for vpn detection, geolocation, and threat intelligence.
+* [mullvad](https://mullvad.net/en): VPN provider.
+* [spamhaus](https://www.spamhaus.org/): Updated existing analyzer to support IPv6.
+* [bbot](https://github.com/blacklanternsecurity/bbot): multipurpose scanner.
+* [debloat](https://github.com/Squiblydoo/debloat): remove excess garbage from bloated executables.
+
+
+## [v6.3.1](https://github.com/khulnasoft/ThreatMatrix/releases/tag/v6.3.1)
+This release provides fixes to the recent added ARM support. (ARM build for v6.3.0 was broken due to some dependencies)
+
+## [v6.3.0](https://github.com/khulnasoft/ThreatMatrix/releases/tag/v6.3.0)
+
+This release brings official support for ARM architecture. From now on, our Docker builds are multi-platform. You can now run ThreatMatrix in your favourite ARM machine smoothly, e.g. Apple Silicon Mac and Raspberry PI.
+
+We have few new analyzers that you can play with (in particular new Vulnerability scanners like WAD, Nuclei) and updated Abuse.Ch analyzers to allow the configuration of your API key.
+
+Then we have a lot of fixes and dependencies upgrades as usual.
+
+Happy hunting!
+
 ## [v6.2.1](https://github.com/khulnasoft/ThreatMatrix/releases/tag/v6.2.1)
 Minor fixes and dependencies upgrades
 
@@ -555,7 +584,7 @@ We are also moving forward to release the next major version (v4). We just need 
 
 We are proud to announce two new sponsorships today!
    - [Milton Security](https://www.miltonsecurity.com?utm_source=threatmatrix)
-   - [LimaCharlie](https://limacharlie.io/blog/limacharlie-sponsors-threat-matrix/?utm_source=threatmatrix&utm_medium=banner)
+   - [LimaCharlie](https://limacharlie.io/blog/limacharlie-sponsors-intel-owl/?utm_source=threatmatrix&utm_medium=banner)
 
 If you are interested in helping the project through a donation, read [here](https://github.com/khulnasoft/ThreatMatrix/blob/master/.github/partnership_and_sponsors.md) how you can do it!
 
@@ -705,7 +734,7 @@ We updated the documentation on how to [Contribute](https://khulnasoft.github.io
 
 ## [v3.1.0](https://github.com/khulnasoft/ThreatMatrix/releases/tag/v3.1.0)
 
-> 🎉 We are glad to welcome [Tines](https://www.tines.com/?utm_source=oss&utm_medium=sponsorship&utm_campaign=threatmatrix) as a new sponsor for ThreatMatrix. Read everything about this partnership [in the Tines' blog](https://www.tines.com/blog/announcing-our-sponsorship-of-threat-matrix).
+> 🎉 We are glad to welcome [Tines](https://www.tines.com/?utm_source=oss&utm_medium=sponsorship&utm_campaign=threatmatrix) as a new sponsor for ThreatMatrix. Read everything about this partnership [in the Tines' blog](https://www.tines.com/blog/announcing-our-sponsorship-of-intel-owl).
 
 **Notes:**
 
@@ -741,7 +770,7 @@ This is a minor patch release.
 
 > Note: This is a major release with MANY breaking changes.
 >
-> ✒️ [Link](https://www.honeynet.org/2021/09/13/threat-matrix-release-v3-0-0/) to the blogpost announcing the release and summary of top new features.
+> ✒️ [Link](https://www.honeynet.org/2021/09/13/intel-owl-release-v3-0-0/) to the blogpost announcing the release and summary of top new features.
 >
 > 💻 GUI changes can be seen in action on the [demo](https://threatmatrixclient.firebaseapp.com/pages/connectors).
 

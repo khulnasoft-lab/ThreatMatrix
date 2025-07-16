@@ -1,0 +1,6 @@
+services:
+  phunter:
+    build:
+      context: ../integrations/phunter
+      dockerfile: Dockerfile
+    image: khulnasoft/threatmatrix_phunter:test

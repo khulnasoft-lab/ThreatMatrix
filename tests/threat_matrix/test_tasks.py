@@ -4,32 +4,31 @@ from unittest.mock import patch
 from django.test import override_settings
 from kombu import uuid
 
+from api_app.analyzables_manager.models import Analyzable
 from api_app.analyzers_manager.models import AnalyzerConfig, AnalyzerReport
-from api_app.choices import PythonModuleBasePaths
+from api_app.choices import Classification, PythonModuleBasePaths
 from api_app.connectors_manager.models import ConnectorConfig, ConnectorReport
 from api_app.ingestors_manager.models import IngestorConfig, IngestorReport
-from api_app.models import Job, LastElasticReportUpdate, PythonModule
+from api_app.models import Job, PythonModule
 from api_app.pivots_manager.models import PivotConfig, PivotReport
 from api_app.visualizers_manager.models import VisualizerConfig, VisualizerReport
 from certego_saas.apps.organization.membership import Membership
 from certego_saas.apps.organization.organization import Organization
 from certego_saas.apps.user.models import User
-from tests import CustomTestCase
-from tests.mock_utils import MockResponseNoOp
 from threat_matrix.tasks import send_plugin_report_to_elastic
+from tests import CustomTestCase
 
 _now = datetime.datetime(2024, 10, 29, 11, tzinfo=datetime.UTC)
 
 
+@patch("threat_matrix.tasks.get_environment", return_value="unittest")
 @patch("threat_matrix.tasks.now", return_value=_now)
-@patch("threat_matrix.tasks.connections.get_connection")
+@override_settings(ELASTICSEARCH_DSL_CLIENT=None)
 class SendElasticTestCase(CustomTestCase):
 
     def setUp(self):
         self.user, _ = User.objects.get_or_create(
-            username="test_elastic_user",
-            email="elastic@threatmatrix.com",
-            password="test",
+            username="test_elastic_user", email="elastic@threatmatrix.com", password="test"
         )
         self.organization, _ = Organization.objects.get_or_create(
             name="test_elastic_org"
@@ -37,8 +36,13 @@ class SendElasticTestCase(CustomTestCase):
         self.membership, _ = Membership.objects.get_or_create(
             user=self.user, organization=self.organization, is_owner=True
         )
+        self.analyzable = Analyzable.objects.create(
+            name="dns.google.com", classification=Classification.DOMAIN
+        )
         self.job = Job.objects.create(
-            observable_name="dns.google.com", tlp="AMBER", user=self.user
+            tlp="AMBER",
+            user=self.user,
+            analyzable=self.analyzable,
         )
         AnalyzerReport.objects.create(  # valid
             config=AnalyzerConfig.objects.get(
@@ -182,19 +186,19 @@ class SendElasticTestCase(CustomTestCase):
         IngestorReport.objects.all().delete()
         PivotReport.objects.all().delete()
         VisualizerReport.objects.all().delete()
-        LastElasticReportUpdate.objects.all().delete()
         self.user.delete()
         self.organization.delete()
         self.membership.delete()
+        self.job.delete()
+        self.analyzable.delete()
 
     @override_settings(ELASTICSEARCH_DSL_ENABLED=True)
     @override_settings(ELASTICSEARCH_DSL_HOST="https://elasticsearch:9200")
     def test_initial(self, *args, **kwargs):
-        self.assertEqual(LastElasticReportUpdate.objects.count(), 0)
 
         with patch(
             "threat_matrix.tasks.bulk",
-            return_value=MockResponseNoOp(json_data={}, status_code=200),
+            return_value=(4, []),
         ) as mocked_elastic_bulk:
             send_plugin_report_to_elastic()
             self.assertTrue(mocked_elastic_bulk.assert_called_once)
@@ -204,7 +208,7 @@ class SendElasticTestCase(CustomTestCase):
                 [
                     {
                         "_op_type": "index",
-                        "_index": "plugin-report-analyzer-report-2024-10-29",
+                        "_index": "plugin-report-unittest-analyzer-report-2024-10-29",
                         "_source": {
                             "user": {"username": "test_elastic_user"},
                             "membership": {
@@ -230,7 +234,7 @@ class SendElasticTestCase(CustomTestCase):
                     },
                     {
                         "_op_type": "index",
-                        "_index": "plugin-report-analyzer-report-2024-10-29",
+                        "_index": "plugin-report-unittest-analyzer-report-2024-10-29",
                         "_source": {
                             "user": {"username": "test_elastic_user"},
                             "membership": {
@@ -256,7 +260,7 @@ class SendElasticTestCase(CustomTestCase):
                     },
                     {
                         "_op_type": "index",
-                        "_index": "plugin-report-connector-report-2024-10-29",
+                        "_index": "plugin-report-unittest-connector-report-2024-10-29",
                         "_source": {
                             "user": {"username": "test_elastic_user"},
                             "membership": {
@@ -287,7 +291,7 @@ class SendElasticTestCase(CustomTestCase):
                     },
                     {
                         "_op_type": "index",
-                        "_index": "plugin-report-pivot-report-2024-10-29",
+                        "_index": "plugin-report-unittest-pivot-report-2024-10-29",
                         "_source": {
                             "user": {
                                 "username": "test_elastic_user",
@@ -320,20 +324,12 @@ class SendElasticTestCase(CustomTestCase):
                 ],
             )
 
-        self.assertEqual(
-            LastElasticReportUpdate.objects.get().last_update_datetime,
-            datetime.datetime(2024, 10, 29, 11, tzinfo=datetime.UTC),
-        )
-
     @override_settings(ELASTICSEARCH_DSL_ENABLED=True)
     @override_settings(ELASTICSEARCH_DSL_HOST="https://elasticsearch:9200")
     def test_update(self, *args, **kwargs):
-        LastElasticReportUpdate.objects.create(
-            last_update_datetime=_now - datetime.timedelta(minutes=5)
-        )
         with patch(
             "threat_matrix.tasks.bulk",
-            return_value=MockResponseNoOp(json_data={}, status_code=200),
+            return_value=(4, []),
         ) as mocked_elastic_bulk:
             send_plugin_report_to_elastic()
             self.assertTrue(mocked_elastic_bulk.assert_called_once)
@@ -342,7 +338,7 @@ class SendElasticTestCase(CustomTestCase):
                 mocked_bulk_param,
                 [
                     {
-                        "_index": "plugin-report-analyzer-report-2024-10-29",
+                        "_index": "plugin-report-unittest-analyzer-report-2024-10-29",
                         "_op_type": "index",
                         "_source": {
                             "user": {"username": "test_elastic_user"},
@@ -368,7 +364,7 @@ class SendElasticTestCase(CustomTestCase):
                         },
                     },
                     {
-                        "_index": "plugin-report-analyzer-report-2024-10-29",
+                        "_index": "plugin-report-unittest-analyzer-report-2024-10-29",
                         "_op_type": "index",
                         "_source": {
                             "user": {"username": "test_elastic_user"},
@@ -394,7 +390,7 @@ class SendElasticTestCase(CustomTestCase):
                         },
                     },
                     {
-                        "_index": "plugin-report-connector-report-2024-10-29",
+                        "_index": "plugin-report-unittest-connector-report-2024-10-29",
                         "_op_type": "index",
                         "_source": {
                             "user": {"username": "test_elastic_user"},
@@ -425,7 +421,7 @@ class SendElasticTestCase(CustomTestCase):
                         },
                     },
                     {
-                        "_index": "plugin-report-pivot-report-2024-10-29",
+                        "_index": "plugin-report-unittest-pivot-report-2024-10-29",
                         "_op_type": "index",
                         "_source": {
                             "user": {"username": "test_elastic_user"},
@@ -456,8 +452,3 @@ class SendElasticTestCase(CustomTestCase):
                     },
                 ],
             )
-
-        self.assertEqual(
-            LastElasticReportUpdate.objects.get().last_update_datetime,
-            datetime.datetime(2024, 10, 29, 11, tzinfo=datetime.UTC),
-        )

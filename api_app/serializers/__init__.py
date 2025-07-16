@@ -6,6 +6,7 @@ from rest_framework.fields import Field
 from api_app.interfaces import OwnershipAbstractModel
 from certego_saas.apps.organization.organization import Organization
 from certego_saas.ext.upload.elastic import BISerializer
+from threat_matrix.settings._util import get_environment
 
 
 class AbstractBIInterface(BISerializer):
@@ -36,12 +37,9 @@ class AbstractBIInterface(BISerializer):
 
     @staticmethod
     def get_environment(instance):
-        if settings.STAGE_PRODUCTION:
-            return "prod"
-        elif settings.STAGE_STAGING:
-            return "stag"
-        else:
-            return "test"
+        # we cannot pass directly the function to the serializer's field
+        # for this reason we need a function that call another function
+        return get_environment()
 
     @staticmethod
     def get_index():
@@ -70,9 +68,9 @@ class ModelWithOwnershipSerializer(rfs.ModelSerializer):
             # 1 - we are owner  OR
             # 2 - we are admin of the same org
             if org.owner == attrs["owner"] or (
-                self.context["request"].user.has_membership()
-                and self.context["request"].user.membership.organization.pk == org.pk
-                and self.context["request"].user.membership.is_admin
+                attrs["owner"].has_membership()
+                and attrs["owner"].membership.organization.pk == org.pk
+                and attrs["owner"].membership.is_admin
             ):
                 attrs["for_organization"] = True
             else:

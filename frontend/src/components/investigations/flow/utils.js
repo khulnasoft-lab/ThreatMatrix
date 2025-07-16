@@ -1,5 +1,6 @@
-import dagre from "@dagrejs/dagre";
+import { getLayoutedElements } from "../../common/flows/getLayoutedElements";
 import { JobFinalStatuses } from "../../../constants/jobConst";
+import { TagsIcons } from "../../../constants/engineConst";
 
 /* eslint-disable id-length */
 function addJobNode(
@@ -10,6 +11,31 @@ function addJobNode(
   refetchInvestigation,
   isFirstLevel,
 ) {
+  // engine fields
+  const engineFields = {
+    evaluation: job?.evaluation || "",
+    reliability: job?.reliability,
+    tags: job?.tags || [],
+  };
+  if (engineFields.tags.length > 0) {
+    const customTags = [];
+    const tags = [];
+    engineFields.tags.forEach((tag) => {
+      if (Object.keys(TagsIcons).includes(tag)) {
+        tags.push(tag);
+      } else {
+        customTags.push(tag);
+      }
+    });
+    if (customTags.length > 0) tags.push(customTags.toString());
+    engineFields.tags = tags;
+  }
+
+  // optional fields
+  if (job.country) engineFields.country = job.country;
+  if (job.isp) engineFields.isp = job.isp;
+  if (job.mimetype) engineFields.mimetype = job.mimetype;
+
   nodes.push({
     id: `job-${job.pk}`,
     data: {
@@ -25,6 +51,7 @@ function addJobNode(
       refetchInvestigation,
       isFirstLevel: isFirstLevel || false,
       created: job.received_request_time,
+      engineFields,
     },
     type: "jobNode",
   });
@@ -51,38 +78,6 @@ function addEdge(edges, job, parentType, parentId) {
       addEdge(edges, child, "job", job.pk);
     });
   }
-}
-
-function getLayoutedElements(nodes, edges) {
-  // needed for graph layout
-  const dagreGraph = new dagre.graphlib.Graph();
-  dagreGraph.setDefaultEdgeLabel(() => ({}));
-
-  const nodeWidth = 300;
-  const nodeHeight = 60;
-
-  dagreGraph.setGraph({ rankdir: "LR" });
-
-  nodes.forEach((node) => {
-    dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
-  });
-
-  edges.forEach((edge) => {
-    dagreGraph.setEdge(edge.source, edge.target);
-  });
-
-  dagre.layout(dagreGraph);
-
-  nodes.forEach((node) => {
-    const nodeWithPosition = dagreGraph.node(node.id);
-    // eslint-disable-next-line no-param-reassign
-    node.position = {
-      x: nodeWithPosition.x - nodeWidth / 2 + 150,
-      y: nodeWithPosition.y - nodeHeight / 2 + 70,
-    };
-    return node;
-  });
-  return { nodes, edges };
 }
 
 export function getNodesAndEdges(
@@ -131,6 +126,10 @@ export function getNodesAndEdges(
     const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
       jobsNodes,
       jobsEdges,
+      300,
+      60,
+      150,
+      80,
     );
     return [
       initialNode.concat(layoutedNodes),

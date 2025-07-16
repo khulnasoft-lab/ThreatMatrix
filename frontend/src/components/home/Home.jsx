@@ -30,10 +30,10 @@ const blogPosts = [
     link: "https://github.com/khulnasoft/thp_workshop_2024",
   },
   {
-    title: "New year, new tool: Threat Matrix",
+    title: "New year, new tool: Intel Owl",
     subText: "Certego Blog: First announcement",
     date: "2nd January 2020",
-    link: "https://www.certego.net/en/news/new-year-new-tool-threat-matrix/",
+    link: "https://www.certego.net/en/news/new-year-new-tool-intel-owl/",
   },
 ];
 
@@ -56,7 +56,7 @@ export default function Home() {
       {/* Content */}
       <Container id="home__content" className="mt-2">
         <ContentSection className="bg-body shadow lead">
-          Threat Matrix is an Open Source Intelligence, or OSINT solution to get
+          Intel Owl is an Open Source Intelligence, or OSINT solution to get
           threat intelligence data about a specific file, an IP or a domain from
           a single API at scale. It integrates a number of analyzers available
           online and a lot of cutting-edge malware analysis tools. It is for

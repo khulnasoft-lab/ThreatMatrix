@@ -37,7 +37,7 @@ jobs:
         uses: actions/checkout@v4.2.2
 
       - name: Set up Python
-        uses: actions/setup-python@v5.3.0
+        uses: actions/setup-python@v5.4.0
         with:
           python-version: 3.11
 
@@ -57,6 +57,9 @@ jobs:
       - name: isort
         run: |
           isort . --profile black --filter-files --check-only --diff --skip configuration/ldap_config.py
+      
+      - name: Perform ShellCheck Analysis
+        run: bash <(curl -s https://raw.githubusercontent.com/CICDToolbox/shellcheck/master/pipeline.sh)
 
   backend-tests:
     runs-on: ubuntu-latest

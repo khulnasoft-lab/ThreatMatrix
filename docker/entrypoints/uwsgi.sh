@@ -4,8 +4,8 @@ until cd /opt/deploy/threat_matrix
 do
     echo "Waiting for server volume..."
 done
-mkdir -p /var/log/threat_matrix/django /var/log/threat_matrix/uwsgi /var/log/threat_matrix/asgi /opt/deploy/threat_matrix/files_required/blint /opt/deploy/threat_matrix/files_required/yara
-chown -R www-data:www-data /var/log/threat_matrix/django /var/log/threat_matrix/uwsgi /var/log/threat_matrix/asgi /opt/deploy/threat_matrix/files_required/blint /opt/deploy/threat_matrix/files_required/yara
+mkdir -p /var/log/threat_matrix/django /var/log/threat_matrix/uwsgi /var/log/threat_matrix/asgi /opt/deploy/files_required/blint /opt/deploy/files_required/yara
+chown -R www-data:www-data /var/log/threat_matrix/django /var/log/threat_matrix/uwsgi /var/log/threat_matrix/asgi /opt/deploy/files_required/blint /opt/deploy/files_required/yara
 
 # Apply database migrations
 echo "Waiting for db to be ready..."
@@ -24,8 +24,8 @@ fi
 # Collect static files
 python manage.py collectstatic --noinput
 echo "------------------------------"
-echo "DEBUG: " $DEBUG
-echo "DJANGO_TEST_SERVER: " $DJANGO_TEST_SERVER
+echo "DEBUG: " "$DEBUG"
+echo "DJANGO_TEST_SERVER: " "$DJANGO_TEST_SERVER"
 echo "------------------------------"
 CHANGELOG_NOTIFICATION_COMMAND='python manage.py changelog_notification .github/CHANGELOG.md THREATMATRIX --number-of-releases 3'
 ELASTIC_TEMPLATE_COMMAND='python manage.py elastic_templates'

@@ -3,6 +3,7 @@ import Joyride from "react-joyride";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useMount } from "react-use";
 import { useGuideContext } from "../contexts/GuideContext";
+import { THREATMATRIX_DOCS_URL } from "../constants/environment";
 
 export default function GuideWrapper() {
   const { guideState, setGuideState } = useGuideContext();
@@ -17,8 +18,7 @@ export default function GuideWrapper() {
           <p>
             Welcome to ThreatMatrixs Guide for First Time Visitors! For further
             questions you could either check out our{" "}
-            <a href="https://khulnasoft.github.io/docs/">docs</a> or reach us
-            out on{" "}
+            <a href={THREATMATRIX_DOCS_URL}>docs</a> or reach us out on{" "}
             <a href="https://gsoc-slack.honeynet.org/">
               the official ThreatMatrix slack channel
             </a>

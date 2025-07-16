@@ -1,20 +1,40 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Button, Modal, ModalHeader, ModalBody } from "reactstrap";
+import {
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  UncontrolledTooltip,
+} from "reactstrap";
 import { RiHeartPulseLine } from "react-icons/ri";
-import { MdDelete, MdFileDownload, MdEdit } from "react-icons/md";
+import {
+  MdDelete,
+  MdFileDownload,
+  MdEdit,
+  MdInfoOutline,
+} from "react-icons/md";
 import { BsPeopleFill } from "react-icons/bs";
 import { AiFillSetting } from "react-icons/ai";
+import { FaDiagramProject } from "react-icons/fa6";
+import { VscJson } from "react-icons/vsc";
+import { Link } from "react-router-dom";
 
 import { IconButton } from "@certego/certego-ui";
 
 import { useAuthStore } from "../../../stores/useAuthStore";
 import { useOrganizationStore } from "../../../stores/useOrganizationStore";
 import { usePluginConfigurationStore } from "../../../stores/usePluginConfigurationStore";
-import { SpinnerIcon } from "../../common/icon/icons";
+import { SpinnerIcon } from "../../common/icon/actionIcons";
 import { deleteConfiguration } from "../pluginsApi";
 import { PluginsTypes } from "../../../constants/pluginConst";
 import { PluginConfigModal } from "../PluginConfigModal";
+import { PlaybookFlows } from "../flows/PlaybookFlows";
+import { JsonEditor } from "../../common/JsonEditor";
+import {
+  THREATMATRIX_DOCS_URL,
+  THREATMATRIX_REPO_URL,
+} from "../../../constants/environment";
 
 export function PluginHealthCheckButton({ pluginName, pluginType_ }) {
   const { checkPluginHealth } = usePluginConfigurationStore(
@@ -199,12 +219,12 @@ export function PluginDeletionButton({ pluginName, pluginType_ }) {
         centered
         zIndex="1050"
         size="lg"
-        keyboard={false}
         backdrop="static"
         labelledBy="Plugin deletion modal"
         isOpen={showModal}
+        toggle={() => setShowModal(!showModal)}
       >
-        <ModalHeader className="mx-2" toggle={() => setShowModal(false)}>
+        <ModalHeader className="mx-2" toggle={() => setShowModal(!showModal)}>
           <small className="text-info">Delete plugin</small>
         </ModalHeader>
         <ModalBody className="d-flex justify-content-between my-2 mx-2">
@@ -219,7 +239,7 @@ export function PluginDeletionButton({ pluginName, pluginType_ }) {
             <Button
               className="mx-2"
               size="sm"
-              onClick={() => setShowModal(false)}
+              onClick={() => setShowModal(!showModal)}
             >
               Cancel
             </Button>
@@ -401,4 +421,160 @@ PluginConfigButton.propTypes = {
     "pivot",
     "visualizer",
   ]).isRequired,
+};
+
+export function PlaybookFlowsButton({ playbook }) {
+  // state
+  const [showModal, setShowModal] = React.useState(false);
+
+  return (
+    <div className="d-flex flex-column align-items-center p-1">
+      <IconButton
+        id={`playbook-flows-btn__${playbook.name}`}
+        color="info"
+        size="sm"
+        Icon={FaDiagramProject}
+        title="View possible playbook execution flows"
+        onClick={() => setShowModal(!showModal)}
+        titlePlacement="top"
+      />
+      {showModal && (
+        <Modal
+          id="playbook-flows-modal"
+          autoFocus
+          centered
+          zIndex="1050"
+          size="lg"
+          backdrop="static"
+          labelledBy="Playbook flows modal"
+          isOpen={showModal}
+          style={{ minWidth: "90%" }}
+          toggle={() => setShowModal(!showModal)}
+        >
+          <ModalHeader className="mx-2" toggle={() => setShowModal(!showModal)}>
+            <small className="text-info">Possible playbook flows</small>
+          </ModalHeader>
+          <ModalBody className="mx-2">
+            <small>
+              Note: Pivots are plugins designed to run automatically within a
+              playbook after certain conditions are triggered. Some flows of the
+              tree could miss in the analysis due to this reason.
+            </small>
+            <div
+              id={`playbookflow-${playbook.id}`}
+              style={{ overflow: "scroll", border: "1px solid #2f515e" }}
+              className=" mt-2 p-2 bg-body"
+            >
+              <PlaybookFlows playbook={playbook} />
+            </div>
+          </ModalBody>
+        </Modal>
+      )}
+    </div>
+  );
+}
+
+PlaybookFlowsButton.propTypes = {
+  playbook: PropTypes.object.isRequired,
+};
+
+export function MappingDataModel({ data, type, pythonModule }) {
+  // state
+  const [showModal, setShowModal] = React.useState(false);
+  const pythonModuleName = pythonModule.split(".")[0];
+
+  return (
+    <div className="d-flex flex-column align-items-center p-1">
+      <IconButton
+        id={`mapping-data-model__${pythonModuleName}`}
+        color="info"
+        size="sm"
+        Icon={VscJson}
+        title="View data model mapping"
+        onClick={() => setShowModal(!showModal)}
+        titlePlacement="top"
+        disabled={Object.keys(data).length === 0}
+      />
+      {showModal && (
+        <Modal
+          id="mapping-data-model-modal"
+          autoFocus
+          centered
+          zIndex="1050"
+          size="lg"
+          backdrop="static"
+          labelledBy="Data model modal"
+          isOpen={showModal}
+          style={{ minWidth: "50%" }}
+          toggle={() => setShowModal(!showModal)}
+        >
+          <ModalHeader className="mx-2" toggle={() => setShowModal(!showModal)}>
+            <small className="text-info">
+              Data model mapping
+              <MdInfoOutline
+                id="dataModelMapping_infoicon"
+                fontSize="16"
+                className="ms-2"
+              />
+              <UncontrolledTooltip
+                trigger="hover"
+                target="dataModelMapping_infoicon"
+                placement="right"
+                fade={false}
+                autohide={false}
+                innerClassName="p-2 text-start text-nowrap md-fit-content"
+              >
+                The main functionality of a `DataModel` is to model an
+                `Analyzer` result to a set of prearranged keys, allowing users
+                to easily search, evaluate and use the analyzer result.
+                <br />
+                For more info check the{" "}
+                <Link
+                  to={`${THREATMATRIX_DOCS_URL}ThreatMatrix/usage/#datamodels`}
+                  target="_blank"
+                >
+                  official doc.
+                </Link>
+              </UncontrolledTooltip>
+            </small>
+          </ModalHeader>
+          <ModalBody className="d-flex flex-column mx-2">
+            <small>
+              The <strong className="text-info">keys </strong>
+              represent the path used to retrieve the value in the analyzer
+              report and the <strong className="text-info">value</strong> the
+              path of the data model.
+            </small>
+            <small>
+              For more info check the{" "}
+              <Link
+                to={`${THREATMATRIX_REPO_URL}tree/master/api_app/analyzers_manager/${type}_analyzers/${pythonModuleName}.py`}
+                target="_blank"
+              >
+                analyzer&apos;s source code.
+              </Link>
+            </small>
+            <div
+              className="my-2 d-flex justify-content-center"
+              style={{ maxHeight: "40vh", width: "100%", overflow: "scroll" }}
+            >
+              <JsonEditor
+                id="data_model_mapping_json"
+                initialJsonData={data}
+                width="100%"
+                height="20vh"
+                readOnly
+              />
+            </div>
+          </ModalBody>
+        </Modal>
+      )}
+    </div>
+  );
+}
+
+MappingDataModel.propTypes = {
+  type: PropTypes.string.isRequired,
+  data: PropTypes.object.isRequired,
+  pythonModule: PropTypes.string.isRequired,
 };
