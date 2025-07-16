@@ -27,7 +27,10 @@ class UrlScan(ObservableAnalyzer):
         pass
 
     def run(self):
-        headers = {"Content-Type": "application/json", "User-Agent": "ThreatMatrix/v1.x"}
+        headers = {
+            "Content-Type": "application/json",
+            "User-Agent": "ThreatMatrix/v1.x",
+        }
         if not hasattr(self, "_api_key_name") and self.urlscan_analysis == "search":
             logger.warning(f"{self.__repr__()} -> Continuing w/o API key..")
         else:

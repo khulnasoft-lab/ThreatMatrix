@@ -584,7 +584,9 @@ class ParameterQuerySet(CleanOnCreateQuerySet):
             test_value=Case(
                 When(
                     name__icontains="url",
-                    then=Value("https://threatmatrix.com", output_field=JSONField()),
+                    then=Value(
+                        "https://recon.khulnasoft.com", output_field=JSONField()
+                    ),
                 ),
                 When(
                     name="pdns_credentials",

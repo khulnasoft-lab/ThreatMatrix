@@ -143,7 +143,7 @@ class EngineConfigTestCase(CustomTestCase):
 
     def test_run_generic(self):
         an1 = Analyzable.objects.create(
-            name="test@threatmatrix.com",
+            name="test@khulnasoft.com",
             classification=Classification.GENERIC,
         )
 

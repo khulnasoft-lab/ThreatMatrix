@@ -227,7 +227,7 @@ class ObservableAnalyzerTestCase(CustomTestCase):
             classification=Classification.HASH,
         )
         an5 = Analyzable.objects.create(
-            name="test@threatmatrix.com",
+            name="test@khulnasoft.com",
             classification=Classification.GENERIC,
         )
         an6 = Analyzable.objects.create(
@@ -303,7 +303,7 @@ class ObservableAnalyzerTestCase(CustomTestCase):
                         elif config.name == "Spamhaus_DROP":
                             name = 51181
                         else:
-                            name = "test@threatmatrix.com"
+                            name = "test@khulnasoft.com"
 
                         # generic should handle different use cases
                         job = Job.objects.get(

@@ -92,7 +92,7 @@ class PlaybookConfigQuerySetTestCase(CustomTestCase):
             robot = User.objects.get(is_superuser=False, username="robot")
         except User.DoesNotExist:
             robot = User.objects.create(
-                username="robot", email="robot@threatmatrix.com", password="test"
+                username="robot", email="robot@khulnasoft.com", password="test"
             )
         robot_profile = UserProfile.objects.get(user=robot)
         robot_profile.is_robot = True

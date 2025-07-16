@@ -28,7 +28,9 @@ class SendElasticTestCase(CustomTestCase):
 
     def setUp(self):
         self.user, _ = User.objects.get_or_create(
-            username="test_elastic_user", email="elastic@threatmatrix.com", password="test"
+            username="test_elastic_user",
+            email="elastic@khulnasoft.com",
+            password="test",
         )
         self.organization, _ = Organization.objects.get_or_create(
             name="test_elastic_org"

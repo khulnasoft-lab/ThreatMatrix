@@ -826,7 +826,7 @@ class PluginConfigViewSetTestCase(CustomViewSetTestCase):
         # they should not find anything
         self.standard_user = User.objects.create_user(
             username="standard_user",
-            email="standard_user@threatmatrix.com",
+            email="standard_user@khulnasoft.com",
             password="test",
         )
         self.standard_user.save()
@@ -901,7 +901,7 @@ class PluginConfigViewSetTestCase(CustomViewSetTestCase):
         org1 = Organization.objects.create(name="testorg1")
         another_owner = User.objects.create_user(
             username="another_owner",
-            email="another_owner@threatmatrix.com",
+            email="another_owner@khulnasoft.com",
             password="test",
         )
         another_owner.save()
@@ -1435,7 +1435,7 @@ class PluginConfigViewSetTestCase(CustomViewSetTestCase):
     def test_get_403(self):
         different_user = User.objects.create_user(
             username="standard2_user",
-            email="standard_user@threatmatrix.com",
+            email="standard_user@khulnasoft.com",
             password="test",
         )
         ac = AnalyzerConfig.objects.get(name="AbuseIPDB")
@@ -1447,7 +1447,7 @@ class PluginConfigViewSetTestCase(CustomViewSetTestCase):
             type="str",
         )
         pc = PluginConfig.objects.create(
-            value="https://threatmatrix.com",
+            value="https://recon.khulnasoft.com",
             owner=different_user,
             parameter=param,
             analyzer_config=ac,

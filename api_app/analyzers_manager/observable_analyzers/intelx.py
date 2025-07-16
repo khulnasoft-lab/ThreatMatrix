@@ -46,7 +46,9 @@ class IntelX(ObservableAnalyzer):
     @cached_property
     def _session(self):
         session = requests.Session()
-        session.headers.update({"x-key": self._api_key_name, "User-Agent": "ThreatMatrix"})
+        session.headers.update(
+            {"x-key": self._api_key_name, "User-Agent": "ThreatMatrix"}
+        )
         return session
 
     def _poll_for_results(self, search_id):

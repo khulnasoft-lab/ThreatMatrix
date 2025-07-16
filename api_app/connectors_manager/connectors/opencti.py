@@ -55,7 +55,9 @@ class OpenCTI(classes.Connector):
             else:
                 obs_type = THREATMATRIX_OPENCTI_TYPE_MAP[Classification.GENERIC]  # text
         else:
-            obs_type = THREATMATRIX_OPENCTI_TYPE_MAP[self._job.analyzable.classification]
+            obs_type = THREATMATRIX_OPENCTI_TYPE_MAP[
+                self._job.analyzable.classification
+            ]
 
         return obs_type
 

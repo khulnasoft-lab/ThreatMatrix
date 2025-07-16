@@ -29,7 +29,10 @@ class AnalyzerReportTestCase(CustomTestCase):
         ar: AnalyzerReport = AnalyzerReport.objects.create(
             report={
                 "evaluation": "MALICIOUS",
-                "urls": [{"url": "www.threatmatrix.com"}, {"url": "www.threatmatrix.com"}],
+                "urls": [
+                    {"url": "www.recon.khulnasoft.com"},
+                    {"url": "www.recon.khulnasoft.com"},
+                ],
             },
             job=job,
             config=config,
@@ -64,7 +67,10 @@ class AnalyzerReportTestCase(CustomTestCase):
         ar: AnalyzerReport = AnalyzerReport.objects.create(
             report={
                 "evaluation": "MALICIOUS",
-                "urls": [{"url": "www.threatmatrix.com"}, {"url": "www.threatmatrix.com"}],
+                "urls": [
+                    {"url": "www.recon.khulnasoft.com"},
+                    {"url": "www.recon.khulnasoft.com"},
+                ],
             },
             job=job,
             config=config,
@@ -84,7 +90,8 @@ class AnalyzerReportTestCase(CustomTestCase):
         self.assertIsNotNone(data_model)
         self.assertEqual(data_model.evaluation, "malicious")
         self.assertCountEqual(
-            data_model.external_references, ["www.threatmatrix.com", "www.threatmatrix.com"]
+            data_model.external_references,
+            ["www.recon.khulnasoft.com", "www.recon.khulnasoft.com"],
         )
         self.assertCountEqual([], ar.errors)
         data_model.delete()
@@ -106,7 +113,10 @@ class AnalyzerReportTestCase(CustomTestCase):
         ar = AnalyzerReport.objects.create(
             report={
                 "evaluation": "MALICIOUS",
-                "urls": [{"url": "www.threatmatrix.com"}, {"url": "www.threatmatrix.com"}],
+                "urls": [
+                    {"url": "www.recon.khulnasoft.com"},
+                    {"url": "www.recon.khulnasoft.com"},
+                ],
             },
             job=job,
             config=config,
@@ -116,11 +126,11 @@ class AnalyzerReportTestCase(CustomTestCase):
         )
         self.assertEqual(ar.get_value(ar.report, ["evaluation"]), "MALICIOUS")
         self.assertEqual(
-            ar.get_value(ar.report, "urls.0.url".split(".")), "www.threatmatrix.com"
+            ar.get_value(ar.report, "urls.0.url".split(".")), "www.recon.khulnasoft.com"
         )
         self.assertCountEqual(
             ar.get_value(ar.report, "urls.url".split(".")),
-            ["www.threatmatrix.com", "www.threatmatrix.com"],
+            ["www.recon.khulnasoft.com", "www.recon.khulnasoft.com"],
         )
         ar.delete()
         job.delete()

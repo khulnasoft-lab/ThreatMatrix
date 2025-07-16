@@ -74,21 +74,21 @@ class CustomTestCase(TestCase):
             cls.guest = User.objects.get(is_superuser=False, username="guest")
         except User.DoesNotExist:
             cls.guest = User.objects.create(
-                username="guest", email="guest@threatmatrix.com", password="test"
+                username="guest", email="guest@khulnasoft.com", password="test"
             )
 
         try:
             cls.user = User.objects.get(is_superuser=False, username="user")
         except User.DoesNotExist:
             cls.user = User.objects.create(
-                username="user", email="user@threatmatrix.com", password="test"
+                username="user", email="user@khulnasoft.com", password="test"
             )
 
         try:
             cls.admin = User.objects.get(is_superuser=False, username="admin")
         except User.DoesNotExist:
             cls.admin = User.objects.create(
-                username="admin", email="admin@threatmatrix.com", password="test"
+                username="admin", email="admin@khulnasoft.com", password="test"
             )
 
         try:
@@ -98,7 +98,7 @@ class CustomTestCase(TestCase):
         except User.DoesNotExist:
             cls.superuser = User.objects.create_superuser(
                 username="superuser@khulnasoft.com",
-                email="test@threatmatrix.com",
+                email="test@khulnasoft.com",
                 password="test",
             )
 
